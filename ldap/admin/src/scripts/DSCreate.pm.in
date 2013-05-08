@@ -247,6 +247,13 @@ sub makeDSDirs {
             return @errs;
         }
     }
+    my $initconfig_dir = $inf->{slapd}->{initconfig_dir} || get_initconfigdir($inf->{General}->{prefix});
+    @errs = makePaths($initconfig_dir, $mode, $inf->{General}->{SuiteSpotUserID},
+                      $inf->{General}->{SuiteSpotGroup});
+    if (@errs) {
+        return @errs;
+    }
+
     # run_dir is a special case because it is usually shared among
     # all instances and the admin server
     # all instances must be able to write to it
