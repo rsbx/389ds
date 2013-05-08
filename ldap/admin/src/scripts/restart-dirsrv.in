@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script that restarts the ns-slapd server.
 # Exit status can be:
