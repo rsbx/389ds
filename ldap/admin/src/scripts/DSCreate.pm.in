@@ -375,8 +375,10 @@ sub createConfigFile {
     }
 
     my @ldiffiles = ("$inf->{General}->{prefix}@templatedir@/template-dse.ldif",
-                     "$inf->{General}->{prefix}@templatedir@/template-suffix-db.ldif",
                      "$inf->{General}->{prefix}@templatedir@/template-sasl.ldif");
+    if (!defined($inf->{slapd}->{add_suffix}) || $inf->{slapd}->{add_suffix}) {
+        push @ldiffiles, "$inf->{General}->{prefix}@templatedir@/template-suffix-db.ldif";
+    }
     if ("@enable_pam_passthru@") {
         push @ldiffiles, "$inf->{General}->{prefix}@templatedir@/template-pampta.ldif";
     }
