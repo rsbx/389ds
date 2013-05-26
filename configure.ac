@@ -261,6 +261,9 @@ if test "$with_fhs_opt" = "yes"; then
   propertydir=/properties
   # relative to libdir
   perldir=/perl
+  # relative to datadir
+  schemadir=/schema
+
 else
   if test "$with_fhs" = "yes"; then
     ac_default_prefix=/usr
@@ -291,6 +294,8 @@ else
   propertydir=/$PACKAGE_NAME/properties
   # relative to libdir
   perldir=/$PACKAGE_NAME/perl
+  # relative to datadir
+  schemadir=/$PACKAGE_NAME/schema
 fi
 
 # if mandir is the default value, override it
@@ -303,7 +308,7 @@ fi
 # relative to sysconfdir
 configdir=/$PACKAGE_NAME/config
 # relative to sysconfdir
-schemadir=/$PACKAGE_NAME/schema
+schemalink=/$PACKAGE_NAME/schema
 
 # default user, group
 defaultuser=nobody
@@ -394,6 +399,7 @@ AC_SUBST(configdir)
 AC_SUBST(sampledatadir)
 AC_SUBST(propertydir)
 AC_SUBST(schemadir)
+AC_SUBST(schemalink)
 AC_SUBST(serverdir)
 AC_SUBST(serverincdir)
 AC_SUBST(serverplugindir)

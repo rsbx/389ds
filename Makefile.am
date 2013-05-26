@@ -154,7 +154,8 @@ selinux-built/dirsrv.fc: selinux-built
 configdir = $(sysconfdir)@configdir@
 sampledatadir = $(datadir)@sampledatadir@
 propertydir = $(datadir)@propertydir@
-schemadir = $(sysconfdir)@schemadir@
+schemadir = $(datadir)@schemadir@
+schemalink = $(sysconfdir)@schemalink@
 serverdir = $(libdir)@serverdir@
 serverplugindir = $(libdir)@serverplugindir@
 taskdir = $(datadir)@scripttemplatedir@
@@ -1494,6 +1495,7 @@ fixupcmd = sed \
 	-e 's,@propertydir\@,$(propertydir),g' \
 	-e 's,@datadir\@,$(datadir),g' \
 	-e 's,@schemadir\@,$(schemadir),g' \
+	-e 's,@schemalink\@,$(schemalink),g' \
 	-e 's,@serverdir\@,$(serverdir),g' \
 	-e 's,@serverincdir\@,$(serverincdir),g' \
 	-e 's,@serverplugindir\@,$(serverplugindir),g' \
@@ -1560,6 +1562,7 @@ fixupcmd = sed \
 	-e 's,@propertydir\@,$(propertydir),g' \
 	-e 's,@datadir\@,$(datadir),g' \
 	-e 's,@schemadir\@,$(schemadir),g' \
+	-e 's,@schemalink\@,$(schemalink),g' \
 	-e 's,@serverdir\@,$(serverdir),g' \
 	-e 's,@serverincdir\@,$(serverincdir),g' \
 	-e 's,@serverplugindir\@,$(serverplugindir),g' \
@@ -1673,3 +1676,5 @@ git-archive:
 	fi ; \
 	git archive --prefix=$(distdir)/ $$gittag | bzip2 > $$srcdistdir/$(distdir).tar.bz2
 
+install-data-hook:
+	$(LN_S) $(schemadir) $(DESTDIR)$(schemalink)

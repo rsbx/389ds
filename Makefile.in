@@ -1319,7 +1319,7 @@ sasl_lib = @sasl_lib@
 sasl_libdir = @sasl_libdir@
 sasl_path = @sasl_path@
 sbindir = @sbindir@
-schemadir = $(sysconfdir)@schemadir@
+schemadir = $(datadir)@schemadir@
 scripttemplatedir = @scripttemplatedir@
 serverdir = $(libdir)@serverdir@
 serverincdir = $(includedir)@serverincdir@
@@ -1464,6 +1464,7 @@ CLEANFILES = dberrstrs.h ns-slapd.properties \
 	ldap/admin/src/scripts/usn-tombstone-cleanup.pl ldap/admin/src/scripts/verify-db.pl \
 	ldap/admin/src/scripts/dbverify
 
+schemalink = $(sysconfdir)@schemalink@
 taskdir = $(datadir)@scripttemplatedir@
 systemdsystemunitdir = @with_systemdsystemunitdir@
 systemdsystemconfdir = @with_systemdsystemconfdir@
@@ -2659,6 +2660,7 @@ rsearch_bin_LDADD = $(NSPR_LINK) $(NSS_LINK) $(LDAPSDK_LINK) $(SASL_LINK) $(LIBS
 @BUNDLE_FALSE@	-e 's,@propertydir\@,$(propertydir),g' \
 @BUNDLE_FALSE@	-e 's,@datadir\@,$(datadir),g' \
 @BUNDLE_FALSE@	-e 's,@schemadir\@,$(schemadir),g' \
+@BUNDLE_FALSE@	-e 's,@schemalink\@,$(schemalink),g' \
 @BUNDLE_FALSE@	-e 's,@serverdir\@,$(serverdir),g' \
 @BUNDLE_FALSE@	-e 's,@serverincdir\@,$(serverincdir),g' \
 @BUNDLE_FALSE@	-e 's,@serverplugindir\@,$(serverplugindir),g' \
@@ -2735,6 +2737,7 @@ rsearch_bin_LDADD = $(NSPR_LINK) $(NSS_LINK) $(LDAPSDK_LINK) $(SASL_LINK) $(LIBS
 @BUNDLE_TRUE@	-e 's,@propertydir\@,$(propertydir),g' \
 @BUNDLE_TRUE@	-e 's,@datadir\@,$(datadir),g' \
 @BUNDLE_TRUE@	-e 's,@schemadir\@,$(schemadir),g' \
+@BUNDLE_TRUE@	-e 's,@schemalink\@,$(schemalink),g' \
 @BUNDLE_TRUE@	-e 's,@serverdir\@,$(serverdir),g' \
 @BUNDLE_TRUE@	-e 's,@serverincdir\@,$(serverincdir),g' \
 @BUNDLE_TRUE@	-e 's,@serverplugindir\@,$(serverplugindir),g' \
@@ -10057,7 +10060,8 @@ install-data-am: install-configDATA install-infDATA \
 	install-serverLTLIBRARIES install-serverincHEADERS \
 	install-serverpluginLTLIBRARIES install-systemdsystemunitDATA \
 	install-taskSCRIPTS install-updateDATA install-updateSCRIPTS
-
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
 
 install-dvi-am:
@@ -10119,28 +10123,28 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 
 uninstall-man: uninstall-man1 uninstall-man8
 
-.MAKE: all check install install-am install-strip
+.MAKE: all check install install-am install-data-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-binPROGRAMS clean-cscope clean-generic clean-libtool \
-	clean-local clean-noinstLIBRARIES clean-noinstPROGRAMS \
-	clean-sbinPROGRAMS clean-serverLTLIBRARIES \
-	clean-serverpluginLTLIBRARIES cscope cscopelist ctags dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip distcheck distclean distclean-compile \
-	distclean-generic distclean-hdr distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-binSCRIPTS install-configDATA \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-infDATA install-info install-info-am \
-	install-initSCRIPTS install-initconfigDATA install-man \
-	install-man1 install-man8 install-mibDATA \
-	install-nodist_propertyDATA install-pdf install-pdf-am \
-	install-perlDATA install-pkgconfigDATA install-propertyDATA \
-	install-ps install-ps-am install-sampledataDATA \
-	install-sbinPROGRAMS install-sbinSCRIPTS install-schemaDATA \
+	clean-binPROGRAMS clean-generic clean-libtool clean-local \
+	clean-noinstLIBRARIES clean-noinstPROGRAMS clean-sbinPROGRAMS \
+	clean-serverLTLIBRARIES clean-serverpluginLTLIBRARIES ctags \
+	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-lzma \
+	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
+	distclean-compile distclean-generic distclean-hdr \
+	distclean-libtool distclean-tags distcleancheck distdir \
+	distuninstallcheck dvi dvi-am html html-am info info-am \
+	install install-am install-binPROGRAMS install-binSCRIPTS \
+	install-configDATA install-data install-data-am \
+	install-data-hook install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-infDATA \
+	install-info install-info-am install-initSCRIPTS \
+	install-initconfigDATA install-man install-man1 install-man8 \
+	install-mibDATA install-nodist_propertyDATA install-pdf \
+	install-pdf-am install-perlDATA install-pkgconfigDATA \
+	install-propertyDATA install-ps install-ps-am \
+	install-sampledataDATA install-sbinPROGRAMS \
+	install-sbinSCRIPTS install-schemaDATA \
 	install-serverLTLIBRARIES install-serverincHEADERS \
 	install-serverpluginLTLIBRARIES install-strip \
 	install-systemdsystemunitDATA install-taskSCRIPTS \
@@ -10240,6 +10244,9 @@ git-archive:
 		gittag=HEAD ; \
 	fi ; \
 	git archive --prefix=$(distdir)/ $$gittag | bzip2 > $$srcdistdir/$(distdir).tar.bz2
+
+install-data-hook:
+	$(LN_S) $(schemadir) $(DESTDIR)$(schemalink)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
