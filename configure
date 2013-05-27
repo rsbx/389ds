@@ -17929,7 +17929,7 @@ if test "$with_fhs_opt" = "yes"; then
   mibdir=/mibs
   # location of property/resource files, relative to datadir
   propertydir=/properties
-  # relative to libdir
+  # relative to datadir
   perldir=/perl
   # relative to datadir
   schemadir=/schema
@@ -17959,7 +17959,7 @@ else
   mibdir=/$PACKAGE_NAME/mibs
   # location of property/resource files, relative to datadir
   propertydir=/$PACKAGE_NAME/properties
-  # relative to libdir
+  # relative to datadir
   perldir=/$PACKAGE_NAME/perl
   # relative to datadir
   schemadir=/$PACKAGE_NAME/schema
