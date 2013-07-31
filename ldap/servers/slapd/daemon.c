@@ -1782,7 +1782,6 @@ daemon_register_reslimits( void )
 			&idletimeout_reslimit_handle ));
 }
 
-
 /*
  * Compute the idle timeout for the connection.
  *
@@ -1877,9 +1876,8 @@ handle_read_ready(Connection_Table *ct, fd_set *readfds)
 
 					/* idle timeout */
 				}
-				else if (( idletimeout = compute_idletimeout(
-						slapdFrontendConfig, c )) > 0 &&
-						(curtime - c->c_idlesince) >= idletimeout &&
+				else if (( c->c_idletimeout > 0 &&
+						(curtime - c->c_idlesince) >= c->c_idletimeout &&
 						NULL == c->c_ops )
 				{
 					disconnect_server_nomutex( c, c->c_connid, -1,
@@ -1901,6 +1899,7 @@ handle_pr_read_ready(Connection_Table *ct, PRIntn num_poll)
 	time_t curtime = current_time();
 	slapdFrontendConfig_t *slapdFrontendConfig = getFrontendConfig();
 	int idletimeout;
+	int maxthreads = config_get_maxthreadsperconn();
 #if defined( XP_WIN32 )
 	int i;
 #endif
@@ -1963,10 +1962,9 @@ handle_pr_read_ready(Connection_Table *ct, PRIntn num_poll)
 				/* This is where the work happens ! */
 				connection_activity( c );
 			}
-			else if (( idletimeout = compute_idletimeout( slapdFrontendConfig,
-					c )) > 0 &&
+			else if (( c->c_ideltimeout > 0 &&
 					c->c_prfd == ct->fd[i].fd &&
-					(curtime - c->c_idlesince) >= idletimeout &&
+					(curtime - c->c_idlesince) >= c->c_ideltimeout &&
 					NULL == c->c_ops )
 			{
 				/* idle timeout */
@@ -2037,9 +2035,8 @@ handle_pr_read_ready(Connection_Table *ct, PRIntn num_poll)
 									   SLAPD_DISCONNECT_POLL, EPIPE );
 					}
 				}
-				else if (( idletimeout = compute_idletimeout(
-						slapdFrontendConfig, c )) > 0 &&
-						(curtime - c->c_idlesince) >= idletimeout &&
+				else if (c->c_idletimeout > 0 &&
+						(curtime - c->c_idlesince) >= c->c_idletimeout &&
 						NULL == c->c_ops )
 				{
 					/* idle timeout */
@@ -2609,6 +2606,7 @@ handle_new_connection(Connection_Table *ct, int tcps, PRFileDesc *pr_acceptfd, i
 	PRNetAddr from;
 	PRFileDesc *pr_clonefd = NULL;
 	ber_len_t maxbersize;
+	slapdFrontendConfig_t *fecfg = getFrontendConfig();
 
 	memset(&from, 0, sizeof(from)); /* reset to nulls so we can see what was set */
 	if ( (ns = accept_and_configure( tcps, pr_acceptfd, &from,
@@ -2624,6 +2622,13 @@ handle_new_connection(Connection_Table *ct, int tcps, PRFileDesc *pr_acceptfd, i
 		return -1;
 	}
 	PR_Lock( conn->c_mutex );
+
+	/*
+	 * Set the default idletimeout and the handle.  We'll update c_idletimeout
+	 * after each bind so we can correctly set the resource limit.
+	 */
+	conn->c_idletimeout = fecfg->idletimeout;
+	conn->c_idletimeout_handle = idletimeout_reslimit_handle;
 
 #if defined( XP_WIN32 )
 	if( !secure )
