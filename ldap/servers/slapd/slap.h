@@ -2280,7 +2280,7 @@ typedef struct _slapdFrontendConfig {
 
   /* disk monitoring */
   int disk_monitoring;
-  PRUint64 disk_threshold;
+  PRInt64 disk_threshold;
   int disk_grace_period;
   int disk_logging_critical;
 
