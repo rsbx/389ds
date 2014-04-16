@@ -937,16 +937,10 @@ valueset_value_syntax_cmp( const Slapi_Attr *a, const Slapi_Value *v1, const Sla
 		 */
 		rc = strcasecmp(v1->bv.bv_val, v2->bv.bv_val);
 	} else {
-        	struct berval *bv1, *bv2;
+		const struct berval *bv1, *bv2;
 		bv1 = &keyvals[0]->bv;
 		bv2 = &keyvals[1]->bv;
-		if ( bv1->bv_len < bv2->bv_len ) {
-			rc = -1;
-		} else if ( bv1->bv_len > bv2->bv_len ) {
-			rc = 1;
-		} else {
-			rc = memcmp( bv1->bv_val, bv2->bv_val, bv1->bv_len );
-		}
+		rc = slapi_berval_cmp (bv1, bv2);
 	}
 	if (keyvals != NULL)
 		valuearray_free( &keyvals );
